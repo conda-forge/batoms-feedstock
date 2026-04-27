@@ -1,0 +1,63 @@
+schema_version: 1
+
+context:
+  name: batoms
+  version: "0.1.3"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/batoms-${{ version }}.tar.gz
+  sha256: d42f8f8aa210fa2c2da376e392db66cee7cf444cc12b501247bbec0d1d0000f2
+
+build:
+  number: 2
+  noarch: python
+  script: ${{ PYTHON }} -m pip install . -vv
+  python:
+    entry_points:
+      - batoms=batoms.cli.main:main
+
+requirements:
+  host:
+    - pip
+    - python ${{ python_min }}.*
+    - setuptools
+  run:
+    - ase
+    - numpy
+    - python >=${{ python_min }}
+    - scikit-image
+    - scipy
+
+tests:
+  - python:
+      imports:
+        - batoms
+        - batoms.api
+      pip_check: true
+      python_version: ${{ python_min }}
+  - requirements:
+      run:
+        - pip
+        - python ${{ python_min }}.*
+    script:
+      - batoms --help
+
+about:
+  license: GPL-3.0-or-later
+  license_file: LICENSE
+  summary: Python module for drawing and rendering beautiful atoms and molecules using Blender.
+  description: |
+    Batoms is a Python package for editing and rendering atoms and
+    molecules objects using blender. A Python interface that allows for
+    automating workflows.
+  homepage: https://beautiful-atoms.readthedocs.io
+  repository: https://github.com/superstar54/beautiful-atoms
+  documentation: https://beautiful-atoms.readthedocs.io
+
+extra:
+  recipe-maintainers:
+    - jan-janssen
